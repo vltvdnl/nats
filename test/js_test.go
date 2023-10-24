@@ -10352,3 +10352,135 @@ func TestJetStreamTransform(t *testing.T) {
 	}
 
 }
+
+func TestJetStreamClusterConsumerHang(t *testing.T) {
+	cfg := &nats.StreamConfig{
+		Name:     "TEST",
+		Subjects: []string{"foo"},
+		Replicas: 3,
+	}
+
+	withJSClusterAndStream(t, "R3S", 3, cfg, func(t *testing.T, stream string, servers ...*jsServer) {
+		var restartInProgress bool
+		mx := sync.Mutex{}
+		randServer := func() *server.Server {
+			return servers[mrand.Intn(len(servers))].Server
+		}
+
+		// Run continuous publisher
+		go func() {
+			nc, js := jsClient(t, randServer())
+			defer nc.Close()
+			var i int
+
+			for {
+				_, err := js.Publish("foo", []byte("OK"))
+				if err != nil {
+					fmt.Println("Publish error: ", err)
+					continue
+				}
+				i++
+				if i%10000 == 0 {
+					fmt.Printf("Published %d messages\n", i)
+				}
+			}
+		}()
+
+		nc, js := jsClient(t, randServer())
+		defer nc.Close()
+		sub, err := js.SubscribeSync("",
+			nats.BindStream("TEST"),
+			nats.OrderedConsumer(),
+		)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		// Restart stream leader after 5 seconds of activity
+		go func() {
+			for {
+				time.Sleep(5 * time.Second)
+				mx.Lock()
+				if restartInProgress {
+					mx.Unlock()
+					continue
+				}
+				mx.Unlock()
+				cons, err := sub.ConsumerInfo()
+				if err != nil {
+					fmt.Println("ConsumerInfo error: ", err)
+					continue
+				}
+				si, err := js.StreamInfo("TEST")
+				if err != nil {
+					fmt.Println("StreamInfo error: ", err)
+					continue
+				}
+				sl, cl := si.Cluster.Leader, cons.Cluster.Leader
+				var restartSrv *jsServer
+				for server := range servers {
+					if servers[server].Server.Name() == sl {
+						restartSrv = servers[server]
+						break
+					}
+				}
+				if restartSrv == nil {
+					fmt.Println("Could not find server to restart")
+					continue
+				}
+				fmt.Printf("Stream leader: %q, Consumer leader: %q\n", sl, cl)
+				fmt.Printf("Restarting server %q\n", restartSrv.Server.Name())
+				restartSrv.Shutdown()
+
+				// sleep between 2 and 12 seconds
+				randTime := mrand.Intn(10) + 2
+				time.Sleep(time.Duration(randTime) * time.Second)
+
+				restartSrv.Restart()
+				fmt.Printf("Restarted server %q\n", restartSrv.Server.Name())
+			}
+		}()
+
+		var countTimeouts int
+		for {
+			if countTimeouts > 30 {
+				ci, err := sub.ConsumerInfo()
+				if err != nil {
+					t.Fatalf("Unexpected error: %v", err)
+				}
+				consJSON, err := json.MarshalIndent(ci, "", "  ")
+				if err != nil {
+					t.Fatalf("Unexpected error: %v", err)
+				}
+				fmt.Printf("ConsumerInfo: %s\n", string(consJSON))
+				si, err := js.StreamInfo("TEST")
+				if err != nil {
+					t.Fatalf("Unexpected error: %v", err)
+				}
+				streamJSON, err := json.MarshalIndent(si, "", "  ")
+				if err != nil {
+					t.Fatalf("Unexpected error: %v", err)
+				}
+				fmt.Printf("StreamInfo: %s\n", string(streamJSON))
+				t.Fatalf("Got too many timeout errors waiting for next message: %d", countTimeouts)
+			}
+
+			// wait for next message
+			// this will return error when consumer leader or publisher is offline
+			// but should recover after all servers are back online
+			_, err := sub.NextMsg(2 * time.Second)
+			if err != nil {
+				mx.Lock()
+				restartInProgress = true
+				mx.Unlock()
+				fmt.Println("err getting msg", err)
+				countTimeouts++
+				continue
+			}
+			mx.Lock()
+			restartInProgress = false
+			mx.Unlock()
+			countTimeouts = 0
+		}
+	})
+}

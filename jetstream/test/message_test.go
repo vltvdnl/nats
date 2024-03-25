@@ -22,9 +22,11 @@ import (
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestMessageDetails(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())
@@ -87,6 +89,7 @@ func TestMessageDetails(t *testing.T) {
 }
 
 func TestAckVariants(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	setup := func(ctx context.Context, t *testing.T) (*server.Server, *nats.Conn, jetstream.JetStream, jetstream.Consumer) {
 		srv := RunBasicJetStreamServer()
 

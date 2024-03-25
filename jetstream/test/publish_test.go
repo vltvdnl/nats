@@ -24,9 +24,11 @@ import (
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestPublishMsg(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	type publishConfig struct {
 		msg             *nats.Msg
 		opts            []jetstream.PublishOpt
@@ -580,6 +582,7 @@ func TestPublishMsg(t *testing.T) {
 }
 
 func TestPublish(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	// Only very basic test cases, as most use cases are tested in TestPublishMsg
 	tests := []struct {
 		name      string
@@ -647,6 +650,7 @@ func TestPublish(t *testing.T) {
 }
 
 func TestPublishMsgAsync(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	type publishConfig struct {
 		msg              *nats.Msg
 		opts             []jetstream.PublishOpt
@@ -1220,6 +1224,7 @@ func TestPublishMsgAsync(t *testing.T) {
 }
 
 func TestPublishMsgAsyncWithPendingMsgs(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	t.Run("outstanding ack exceed limit", func(t *testing.T) {
 		srv := RunBasicJetStreamServer()
 		defer shutdownJSServerAndRemoveStorage(t, srv)
@@ -1329,6 +1334,7 @@ func TestPublishMsgAsyncWithPendingMsgs(t *testing.T) {
 }
 
 func TestPublishAsyncResetPendingOnReconnect(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -1393,6 +1399,7 @@ func TestPublishAsyncResetPendingOnReconnect(t *testing.T) {
 }
 
 func TestAsyncPublishRetry(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name     string
 		pubOpts  []jetstream.PublishOpt

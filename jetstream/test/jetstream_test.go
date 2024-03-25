@@ -24,9 +24,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestNewWithAPIPrefix(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	t.Run("import subject from another account", func(t *testing.T) {
 		conf := createConfFile(t, []byte(`
 		listen: 127.0.0.1:-1
@@ -105,6 +107,7 @@ func TestNewWithAPIPrefix(t *testing.T) {
 }
 
 func TestNewWithDomain(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	t.Run("jetstream account with domain", func(t *testing.T) {
 		conf := createConfFile(t, []byte(`
 			listen: 127.0.0.1:-1
@@ -165,6 +168,7 @@ func TestNewWithDomain(t *testing.T) {
 }
 
 func TestWithClientTrace(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())
@@ -201,6 +205,7 @@ func TestWithClientTrace(t *testing.T) {
 }
 
 func TestCreateStream(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		stream    string
@@ -309,6 +314,7 @@ func TestCreateStream(t *testing.T) {
 }
 
 func TestCreateStreamMirrorCrossDomains(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	test := []struct {
 		name         string
 		streamConfig *jetstream.StreamConfig
@@ -462,6 +468,7 @@ func TestCreateStreamMirrorCrossDomains(t *testing.T) {
 }
 
 func TestCreateOrUpdateStream(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name          string
 		stream        string
@@ -592,6 +599,7 @@ func TestCreateOrUpdateStream(t *testing.T) {
 }
 
 func TestUpdateStream(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		stream    string
@@ -700,6 +708,7 @@ func TestUpdateStream(t *testing.T) {
 }
 
 func TestStream(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		stream    string
@@ -784,6 +793,7 @@ func TestStream(t *testing.T) {
 }
 
 func TestDeleteStream(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		stream    string
@@ -864,6 +874,7 @@ func TestDeleteStream(t *testing.T) {
 }
 
 func TestAccountInfo(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	t.Run("fetch account info", func(t *testing.T) {
 		srv := RunBasicJetStreamServer()
 		defer shutdownJSServerAndRemoveStorage(t, srv)
@@ -950,6 +961,7 @@ func TestAccountInfo(t *testing.T) {
 }
 
 func TestListStreams(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name       string
 		streamsNum int
@@ -1047,6 +1059,7 @@ func TestListStreams(t *testing.T) {
 }
 
 func TestStreamNames(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name       string
 		streamsNum int
@@ -1145,6 +1158,7 @@ func TestStreamNames(t *testing.T) {
 }
 
 func TestJetStream_CreateOrUpdateConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name           string
 		stream         string
@@ -1265,6 +1279,7 @@ func TestJetStream_CreateOrUpdateConsumer(t *testing.T) {
 }
 
 func TestJetStream_CreateConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name           string
 		consumerConfig jetstream.ConsumerConfig
@@ -1350,6 +1365,7 @@ func TestJetStream_CreateConsumer(t *testing.T) {
 }
 
 func TestJetStream_UpdateConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name           string
 		consumerConfig jetstream.ConsumerConfig
@@ -1446,6 +1462,7 @@ func TestJetStream_UpdateConsumer(t *testing.T) {
 }
 
 func TestJetStream_Consumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		stream    string
@@ -1546,6 +1563,7 @@ func TestJetStream_Consumer(t *testing.T) {
 }
 
 func TestJetStream_DeleteConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		stream    string
@@ -1651,6 +1669,7 @@ func TestJetStream_DeleteConsumer(t *testing.T) {
 }
 
 func TestStreamNameBySubject(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		subject   string
@@ -1745,6 +1764,7 @@ func TestStreamNameBySubject(t *testing.T) {
 }
 
 func TestJetStreamTransform(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 	nc, js := jsClient(t, s)
@@ -1788,6 +1808,7 @@ func TestJetStreamTransform(t *testing.T) {
 }
 
 func TestStreamConfigMatches(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())
@@ -1909,6 +1930,7 @@ func TestStreamConfigMatches(t *testing.T) {
 }
 
 func TestConsumerConfigMatches(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())

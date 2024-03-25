@@ -30,9 +30,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestObjectBasics(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -130,6 +132,7 @@ func TestObjectBasics(t *testing.T) {
 }
 
 func TestCreateObjectStore(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -153,6 +156,7 @@ func TestCreateObjectStore(t *testing.T) {
 }
 
 func TestUpdateObjectStore(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -173,6 +177,7 @@ func TestUpdateObjectStore(t *testing.T) {
 }
 
 func TestCreateOrUpdateObjectStore(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -193,6 +198,7 @@ func TestCreateOrUpdateObjectStore(t *testing.T) {
 }
 
 func TestGetObjectDigestMismatch(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -229,6 +235,7 @@ func TestGetObjectDigestMismatch(t *testing.T) {
 }
 
 func TestDefaultObjectStatus(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -259,6 +266,7 @@ func TestDefaultObjectStatus(t *testing.T) {
 }
 
 func TestObjectFileBasics(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -303,6 +311,7 @@ func TestObjectFileBasics(t *testing.T) {
 }
 
 func TestObjectMulti(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -350,6 +359,7 @@ func TestObjectMulti(t *testing.T) {
 }
 
 func TestObjectDeleteMarkers(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -391,6 +401,7 @@ func TestObjectDeleteMarkers(t *testing.T) {
 }
 
 func TestObjectMultiWithDelete(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -433,6 +444,7 @@ func TestObjectMultiWithDelete(t *testing.T) {
 }
 
 func TestObjectNames(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -462,6 +474,7 @@ func TestObjectNames(t *testing.T) {
 }
 
 func TestObjectMetadata(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -561,6 +574,7 @@ func TestObjectMetadata(t *testing.T) {
 }
 
 func TestObjectWatch(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	expectUpdateF := func(t *testing.T, watcher jetstream.ObjectWatcher) func(name string) {
 		return func(name string) {
 			t.Helper()
@@ -696,6 +710,7 @@ func TestObjectWatch(t *testing.T) {
 }
 
 func TestObjectLinks(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -838,6 +853,7 @@ func expectLinkPartsAreCorrect(t *testing.T, linkObject *jetstream.ObjectInfo, b
 
 // Right now no history, just make sure we are cleaning up after ourselves.
 func TestObjectHistory(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -872,6 +888,7 @@ func TestObjectHistory(t *testing.T) {
 }
 
 func TestObjectList(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -977,6 +994,7 @@ func TestObjectList(t *testing.T) {
 }
 
 func TestObjectMaxBytes(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -997,6 +1015,7 @@ func TestObjectMaxBytes(t *testing.T) {
 }
 
 func TestListObjectStores(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name       string
 		bucketsNum int
@@ -1055,6 +1074,7 @@ func TestListObjectStores(t *testing.T) {
 }
 
 func TestGetObjectDigestValue(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		inputFile string
 		expected  string
@@ -1091,6 +1111,7 @@ func TestGetObjectDigestValue(t *testing.T) {
 }
 
 func TestDecodeObjectDigest(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		inputDigest  string
 		expectedFile string
@@ -1135,6 +1156,7 @@ func TestDecodeObjectDigest(t *testing.T) {
 }
 
 func TestObjectStoreGetObjectContextTimeout(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -1164,6 +1186,7 @@ func TestObjectStoreGetObjectContextTimeout(t *testing.T) {
 }
 
 func TestObjectStoreCompression(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -1199,6 +1222,7 @@ func TestObjectStoreCompression(t *testing.T) {
 }
 
 func TestObjectStoreMirror(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 

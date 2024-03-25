@@ -21,9 +21,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestConsumerInfo(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	t.Run("get consumer info, ok", func(t *testing.T) {
@@ -121,6 +123,7 @@ func TestConsumerInfo(t *testing.T) {
 }
 
 func TestConsumerCachedInfo(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())

@@ -20,9 +20,11 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
+	"go.uber.org/goleak"
 )
 
 func TestMessageMetadata(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name             string
 		givenReply       string
@@ -83,6 +85,7 @@ func TestMessageMetadata(t *testing.T) {
 }
 
 func TestValidateSubject(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		subject   string
 		withError bool
@@ -118,6 +121,7 @@ func TestValidateSubject(t *testing.T) {
 }
 
 func TestRetryWithBackoff(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name                  string
 		givenOpts             backoffOpts
@@ -276,6 +280,7 @@ func TestRetryWithBackoff(t *testing.T) {
 }
 
 func TestPullConsumer_checkPending(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name                string
 		givenSub            *pullSubscription

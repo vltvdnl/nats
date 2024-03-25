@@ -23,9 +23,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestJetStreamErrors(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	t.Run("API error", func(t *testing.T) {
 		conf := createConfFile(t, []byte(`
 			listen: 127.0.0.1:-1

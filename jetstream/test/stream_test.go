@@ -24,9 +24,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestCreateOrUpdateConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name           string
 		consumerConfig jetstream.ConsumerConfig
@@ -142,6 +144,7 @@ func TestCreateOrUpdateConsumer(t *testing.T) {
 }
 
 func TestCreateConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name           string
 		consumerConfig jetstream.ConsumerConfig
@@ -266,6 +269,7 @@ func TestCreateConsumer(t *testing.T) {
 }
 
 func TestUpdateConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name           string
 		consumerConfig jetstream.ConsumerConfig
@@ -357,6 +361,7 @@ func TestUpdateConsumer(t *testing.T) {
 }
 
 func TestConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		durable   string
@@ -422,6 +427,7 @@ func TestConsumer(t *testing.T) {
 }
 
 func TestDeleteConsumer(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		durable   string
@@ -488,6 +494,7 @@ func TestDeleteConsumer(t *testing.T) {
 }
 
 func TestStreamInfo(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name                string
 		subjectsFilter      string
@@ -611,6 +618,7 @@ func TestStreamInfo(t *testing.T) {
 }
 
 func TestSubjectsFilterPaging(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 
@@ -653,6 +661,7 @@ func TestSubjectsFilterPaging(t *testing.T) {
 }
 
 func TestStreamCachedInfo(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())
@@ -709,6 +718,7 @@ func TestStreamCachedInfo(t *testing.T) {
 }
 
 func TestGetMsg(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name            string
 		seq             uint64
@@ -892,6 +902,7 @@ func TestGetMsg(t *testing.T) {
 }
 
 func TestGetLastMsgForSubject(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name         string
 		subject      string
@@ -1016,6 +1027,7 @@ func TestGetLastMsgForSubject(t *testing.T) {
 }
 
 func TestDeleteMsg(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		seq       uint64
@@ -1108,6 +1120,7 @@ func TestDeleteMsg(t *testing.T) {
 }
 
 func TestSecureDeleteMsg(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name      string
 		seq       uint64
@@ -1182,6 +1195,7 @@ func TestSecureDeleteMsg(t *testing.T) {
 }
 
 func TestListConsumers(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name         string
 		consumersNum int
@@ -1261,6 +1275,7 @@ func TestListConsumers(t *testing.T) {
 }
 
 func TestConsumerNames(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name         string
 		consumersNum int
@@ -1341,6 +1356,7 @@ func TestConsumerNames(t *testing.T) {
 }
 
 func TestPurgeStream(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name        string
 		opts        []jetstream.StreamPurgeOpt

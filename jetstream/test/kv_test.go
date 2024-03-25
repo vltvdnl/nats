@@ -27,9 +27,11 @@ import (
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestKeyValueBasics(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -114,6 +116,7 @@ func TestKeyValueBasics(t *testing.T) {
 }
 
 func TestCreateKeyValue(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -137,6 +140,7 @@ func TestCreateKeyValue(t *testing.T) {
 }
 
 func TestUpdateKeyValue(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -157,6 +161,7 @@ func TestUpdateKeyValue(t *testing.T) {
 }
 
 func TestCreateOrUpdateKeyValue(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -177,6 +182,7 @@ func TestCreateOrUpdateKeyValue(t *testing.T) {
 }
 
 func TestKeyValueHistory(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -217,6 +223,7 @@ func TestKeyValueHistory(t *testing.T) {
 }
 
 func TestKeyValueWatch(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	expectUpdateF := func(t *testing.T, watcher jetstream.KeyWatcher) func(key, value string, revision uint64) {
 		return func(key, value string, revision uint64) {
 			t.Helper()
@@ -517,6 +524,7 @@ func TestKeyValueWatch(t *testing.T) {
 }
 
 func TestKeyValueWatchContext(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -546,6 +554,7 @@ func TestKeyValueWatchContext(t *testing.T) {
 }
 
 func TestKeyValueWatchContextUpdates(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -583,6 +592,7 @@ func TestKeyValueWatchContextUpdates(t *testing.T) {
 }
 
 func TestKeyValueBindStore(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -614,6 +624,7 @@ func TestKeyValueBindStore(t *testing.T) {
 }
 
 func TestKeyValueDeleteStore(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -640,6 +651,7 @@ func TestKeyValueDeleteStore(t *testing.T) {
 }
 
 func TestKeyValueDeleteVsPurge(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -694,6 +706,7 @@ func TestKeyValueDeleteVsPurge(t *testing.T) {
 }
 
 func TestKeyValueDeleteTombstones(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -739,6 +752,7 @@ func TestKeyValueDeleteTombstones(t *testing.T) {
 }
 
 func TestKeyValuePurgeDeletesMarkerThreshold(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -787,6 +801,7 @@ func TestKeyValuePurgeDeletesMarkerThreshold(t *testing.T) {
 }
 
 func TestKeyValueKeys(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -864,6 +879,7 @@ func TestKeyValueKeys(t *testing.T) {
 }
 
 func TestKeyValueListKeys(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -938,6 +954,7 @@ func TestKeyValueListKeys(t *testing.T) {
 }
 
 func TestKeyValueCrossAccounts(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	conf := createConfFile(t, []byte(`
         jetstream: enabled
         accounts: {
@@ -1119,6 +1136,7 @@ func TestKeyValueCrossAccounts(t *testing.T) {
 }
 
 func TestKeyValueDuplicatesWindow(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -1149,6 +1167,7 @@ func TestKeyValueDuplicatesWindow(t *testing.T) {
 }
 
 func TestListKeyValueStores(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	tests := []struct {
 		name       string
 		bucketsNum int
@@ -1213,6 +1232,7 @@ func TestListKeyValueStores(t *testing.T) {
 }
 
 func TestKeyValueMirrorCrossDomains(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	keyExists := func(t *testing.T, kv jetstream.KeyValue, key string, expected string) jetstream.KeyValueEntry {
 		var e jetstream.KeyValueEntry
 		var err error
@@ -1376,6 +1396,7 @@ func TestKeyValueMirrorCrossDomains(t *testing.T) {
 }
 
 func TestKeyValueRePublish(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -1435,6 +1456,7 @@ func TestKeyValueRePublish(t *testing.T) {
 }
 
 func TestKeyValueMirrorDirectGet(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -1473,6 +1495,7 @@ func TestKeyValueMirrorDirectGet(t *testing.T) {
 }
 
 func TestKeyValueCreate(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 
@@ -1566,6 +1589,7 @@ func expectErr(t *testing.T, err error, expected ...error) {
 }
 
 func TestKeyValueCompression(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	s := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, s)
 

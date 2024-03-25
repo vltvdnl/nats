@@ -23,9 +23,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestOrderedConsumerConsume(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -451,6 +453,7 @@ func TestOrderedConsumerConsume(t *testing.T) {
 }
 
 func TestOrderedConsumerMessages(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -920,6 +923,7 @@ func TestOrderedConsumerMessages(t *testing.T) {
 }
 
 func TestOrderedConsumerFetch(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -1066,6 +1070,7 @@ func TestOrderedConsumerFetch(t *testing.T) {
 }
 
 func TestOrderedConsumerFetchBytes(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -1212,6 +1217,7 @@ func TestOrderedConsumerFetchBytes(t *testing.T) {
 }
 
 func TestOrderedConsumerNext(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -1302,6 +1308,7 @@ func TestOrderedConsumerNext(t *testing.T) {
 }
 
 func TestOrderedConsumerFetchNoWait(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -1409,6 +1416,7 @@ func TestOrderedConsumerFetchNoWait(t *testing.T) {
 }
 
 func TestOrderedConsumerInfo(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())
@@ -1460,6 +1468,7 @@ func TestOrderedConsumerInfo(t *testing.T) {
 }
 
 func TestOrderedConsumerNextTimeout(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())
@@ -1491,6 +1500,7 @@ func TestOrderedConsumerNextTimeout(t *testing.T) {
 }
 
 func TestOrderedConsumerNextOrder(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	srv := RunBasicJetStreamServer()
 	defer shutdownJSServerAndRemoveStorage(t, srv)
 	nc, err := nats.Connect(srv.ClientURL())

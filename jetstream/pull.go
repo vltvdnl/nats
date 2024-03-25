@@ -921,6 +921,7 @@ func (s *pullSubscription) pullMessages(subject string) {
 }
 
 func (s *pullSubscription) scheduleHeartbeatCheck(dur time.Duration) *hbMonitor {
+	fmt.Println("scheduleHeartbeatCheck")
 	if dur == 0 {
 		return nil
 	}

@@ -23,9 +23,11 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/goleak"
 )
 
 func TestPullConsumerFetch(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -478,6 +480,7 @@ func TestPullConsumerFetch(t *testing.T) {
 }
 
 func TestPullConsumerFetchBytes(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	msg := [10]byte{}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn, count int) {
@@ -777,6 +780,7 @@ func TestPullConsumerFetchBytes(t *testing.T) {
 }
 
 func TestPullConsumerFetch_WithCluster(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -878,6 +882,7 @@ func TestPullConsumerFetch_WithCluster(t *testing.T) {
 }
 
 func TestPullConsumerMessages(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -1818,6 +1823,7 @@ func TestPullConsumerMessages(t *testing.T) {
 }
 
 func TestPullConsumerConsume(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {
@@ -2588,6 +2594,7 @@ func TestPullConsumerConsume(t *testing.T) {
 }
 
 func TestPullConsumerConsume_WithCluster(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, js jetstream.JetStream) {
@@ -2807,6 +2814,7 @@ func TestPullConsumerConsume_WithCluster(t *testing.T) {
 }
 
 func TestPullConsumerNext(t *testing.T) {
+	defer goleak.VerifyNone(t)
 	testSubject := "FOO.123"
 	testMsgs := []string{"m1", "m2", "m3", "m4", "m5"}
 	publishTestMsgs := func(t *testing.T, nc *nats.Conn) {

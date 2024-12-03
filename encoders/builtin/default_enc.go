@@ -38,7 +38,10 @@ var nilB = []byte("")
 func (je *DefaultEncoder) Encode(subject string, v any) ([]byte, error) {
 	switch arg := v.(type) {
 	case string:
-		bytes := *(*[]byte)(unsafe.Pointer(&arg))
+		bytes := *(*[]byte)(unsafe.Pointer(&struct {
+			s   string
+			cap int
+		}{arg, len(arg)}))
 		return bytes, nil
 	case []byte:
 		return arg, nil
